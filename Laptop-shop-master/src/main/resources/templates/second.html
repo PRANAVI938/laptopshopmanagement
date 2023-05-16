@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+</head>
+<body>
+<nav>
+    <div th:insert="~{navmenu::${menubar}}"></div>
+
+</nav>
+
+<div class="container">
+
+</div>
+<form method="post" action="/order/make-order">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <input type="hidden" th:value="${#authentication.principal.id}">
+    <table class="table table-striped container">
+        <thead class="thead-dark">
+        <th>Товар</th>
+        <th>Количество</th>
+        <th>Действия</th>
+        </thead>
+        <tr th:each="laptop : ${cart.getTovarList()}" th:name="tovarListing" >
+            <td th:text="${laptop.key.getProductName()}">
+            <td th:text="${laptop.value}">
+            </td>
+            <td>
+                <a th:href="@{'/laptop/add-to-cart/' + ${laptop.key.getId()}}">
+                    <span class="btn btn-primary" >+1
+                    </span>
+                </a>
+                <a th:href="@{'/laptop/del-from-cart/' + ${laptop.key.getId()}}">
+                    <span class="btn btn-primary" >-1
+                    </span>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>Cумма:</th>
+            <th th:text="${cart.getSum()}"></th>
+        </tr>
+
+
+    </table>
+    <div class="container">
+        <button th:if="${cart.getSum() != 0}" type="submit" name="knopka" class="btn btn-primary" value="submit">Заказать</button>
+        <button th:if="${cart.getSum() != 0}" type="submit" name="knopka" class="btn btn-danger" value="deleteall">Очистить</button>
+    </div>
+
+</form>
+</body>
+</html>
